@@ -8,6 +8,11 @@ use Spatie\Permission\Models\Role;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 
+use App\Http\Controllers\Controller;
+use DB;
+use Hash;
+use Illuminate\Support\Arr;
+
 class UsersController extends Controller
 {
     /**
@@ -27,9 +32,16 @@ class UsersController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-    public function create() 
+    // public function create() 
+    // {
+    //     return view('users.create');
+    // }
+
+    public function create()
     {
-        return view('users.create');
+    $roles = Role::pluck('name','name')->all();
+    // dd($roles);
+    return view('users.create',compact('roles'));
     }
 
     /**
@@ -51,6 +63,21 @@ class UsersController extends Controller
         return redirect()->route('users.index')
             ->withSuccess(__('User created successfully.'));
     }
+    // public function store(Request $request)
+    // {
+    // $this->validate($request, [
+    // 'name' => 'required',
+    // 'email' => 'required|email|unique:users,email',
+    // 'password' => 'required|same:confirm-password',
+    // 'roles' => 'required'
+    // ]);
+    // $input = $request->all();
+    // $input['password'] = Hash::make($input['password']);
+    // $user = User::create($input);
+    // $user->assignRole($request->input('roles'));
+    // return redirect()->route('users.index')
+    // ->with('success','User created successfully');
+    // }
 
     /**
      * Show user data
@@ -59,11 +86,17 @@ class UsersController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user) 
+    // public function show(User $user) 
+    // {
+    //     return view('users.show', [
+    //         'user' => $user
+    //     ]);
+    // }
+
+    public function show($id)
     {
-        return view('users.show', [
-            'user' => $user
-        ]);
+    $user = User::find($id);
+    return view('users.show',compact('user'));
     }
 
     /**
